@@ -2,7 +2,7 @@
 
 export const fetchLeccionContent = async (prompt) => {
   // Hacemos una llamada a nuestra propia función serverless, no a Google.
-  const response = await fetch("/.netlify/functions/pideAGemini", {
+  const response = await fetch("/pideAGemini", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

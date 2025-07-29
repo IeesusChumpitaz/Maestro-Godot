@@ -29,7 +29,7 @@ export default defineConfig([
 
   // Este bloque es específico para nuestras funciones de Netlify.
   {
-    files: ["netlify/functions/**/*.js"], // Se aplica solo a estos archivos
+    files: ["functions/**/*.js"], // Se aplica solo a estos archivos
     languageOptions: {
       globals: {
         ...globals.node, // Importa TODAS las variables globales de Node.js

@@ -1,4 +1,4 @@
-// netlify/functions/pideAGemini.js
+// functions/pideAGemini.js
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Función principal que Netlify ejecutará.
