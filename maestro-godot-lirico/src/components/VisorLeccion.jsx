@@ -117,7 +117,7 @@ const VisorLeccion = ({ reino }) => {
         minHeight: 0,
       }}
     >
-      <CardContent sx={{ flexGrow: 1, p: 4, overflowY: "auto" }}>
+      <CardContent sx={{ p: 4, overflowY: "auto" }}>
         {renderContent()}
       </CardContent>
     </Card>
