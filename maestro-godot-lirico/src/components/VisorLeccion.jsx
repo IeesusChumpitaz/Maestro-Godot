@@ -10,6 +10,7 @@ import {
   ListItemText,
   CircularProgress,
   Alert,
+  Button
 } from "@mui/material";
 import { fetchLeccionContent } from "../services/geminiService"; // 1. Importamos nuestro servicio
 
