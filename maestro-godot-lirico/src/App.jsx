@@ -29,7 +29,9 @@ function App() {
       <Header onMenuClick={togglePanel} />
 
       {/* Contenedor para el contenido principal (el área debajo del header) */}
-      <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
+      <Box
+        sx={{ display: "flex", flexGrow: 1, overflow: "hidden", minHeight: 0 }}
+      >
         {/* PANEL DE USUARIO */}
         <PanelUsuario abierto={panelAbierto} />
 
