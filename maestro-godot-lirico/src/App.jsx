@@ -45,7 +45,7 @@ function App() {
           />
 
           {/* VISOR DE LECCIÓN */}
-          <Box sx={{ flexGrow: 1, mt: 3, minHeight: "300px" }}>
+          <Box sx={{ flexGrow: 1, mt: 3, minHeight: 0 }}>
             <VisorLeccion reino={reinoActivo} />
           </Box>
         </Box>
