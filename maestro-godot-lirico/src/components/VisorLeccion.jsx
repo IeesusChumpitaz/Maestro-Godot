@@ -10,7 +10,7 @@ import {
   ListItemText,
   CircularProgress,
   Alert,
-  Button
+  Button,
 } from "@mui/material";
 import { fetchLeccionContent } from "../services/geminiService"; // 1. Importamos nuestro servicio
 
@@ -110,7 +110,9 @@ const VisorLeccion = ({ reino }) => {
 
   return (
     <Card sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-      <CardContent sx={{ flexGrow: 1, p: 4 }}>{renderContent()}</CardContent>
+      <CardContent sx={{ flexGrow: 1, p: 4, overflowY: "auto" }}>
+        {renderContent()}
+      </CardContent>
     </Card>
   );
 };
