@@ -1,45 +1,42 @@
-// functions/pideAGemini.js
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// functions/pideAGemini.js - Versión para Cloudflare
 
-// Función principal que Netlify ejecutará.
-// eslint-disable-next-line no-unused-vars
-exports.handler = async function (event, context) {
-  // 1. Validar que la solicitud sea del tipo correcto (POST).
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+// La firma de la función es diferente. Se exporta una función 'onRequest'.
+export async function onRequest(context) {
+  // 1. El método de la solicitud se encuentra en context.request.method
+  if (context.request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
   }
 
   try {
-    // 2. Obtener el prompt del cuerpo de la solicitud que envía el frontend.
-    const { prompt } = JSON.parse(event.body);
+    // 2. El cuerpo de la solicitud se obtiene con .json() sobre el request
+    const { prompt } = await context.request.json();
 
-    // 3. Obtener la clave de API de forma segura desde las variables de entorno de Netlify.
-    const API_KEY = process.env.GEMINI_API_KEY;
+    // 3. La clave de API se obtiene de context.env
+    const API_KEY = context.env.GEMINI_API_KEY;
     if (!API_KEY) {
-      throw new Error("API Key no encontrada.");
+      throw new Error("API Key no encontrada en el entorno de Cloudflare.");
     }
 
+    // Esta parte es la única que no cambia, es la lógica de Google
+    const { GoogleGenerativeAI } = await import("@google/generative-ai");
     const genAI = new GoogleGenerativeAI(API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-    // 4. Generar el contenido y esperar la respuesta.
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
 
-    // 5. Devolver la respuesta de Gemini al frontend.
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ data: text }),
-    };
+    // 4. Se devuelve una nueva 'Response' estándar con el contenido y las cabeceras.
+    return new Response(JSON.stringify({ data: text }), {
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    // 6. Manejar cualquier error que ocurra y devolver un mensaje claro.
-    console.error("Error en la función serverless:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: `Error interno del servidor: ${error.message}`,
-      }),
-    };
+    console.error("Error en la función de Cloudflare:", error);
+    return new Response(
+      JSON.stringify({ error: `Error interno del servidor: ${error.message}` }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
-};
+}
