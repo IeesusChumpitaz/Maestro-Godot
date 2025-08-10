@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 // 1. Importamos nuestra imagen de prueba
-import visualPlaceholder from "../assets/visual-placeholder.png";
+import visualPlaceholder from "../assets/placeholder.png";
 
 const VisorLeccion = ({ reino, sx }) => {
   const [leccionActiva, setLeccionActiva] = useState(null);
