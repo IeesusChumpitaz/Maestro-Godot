@@ -8,64 +8,73 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  CircularProgress,
-  Alert,
   Button,
 } from "@mui/material";
-import { fetchLeccionContent } from "../services/geminiService"; // 1. Importamos nuestro servicio
+// 1. Importamos nuestra imagen de prueba
+import visualPlaceholder from "../assets/visual-placeholder.png";
 
-const VisorLeccion = ({ reino }) => {
-  // 2. Añadimos nuevos estados para manejar el contenido, la carga y los errores
+const VisorLeccion = ({ reino, sx }) => {
   const [leccionActiva, setLeccionActiva] = useState(null);
-  const [cargando, setCargando] = useState(false);
-  const [error, setError] = useState(null);
 
-  // 3. Esta es la función que se ejecuta al hacer clic en una Gema
-  const handleGemaClick = async (gema) => {
-    setCargando(true);
-    setError(null);
-    setLeccionActiva({ nombre: gema.nombre, contenido: "" }); // Mostramos el título inmediatamente
-
-    try {
-      // El prompt que le daremos al "Maestro Godot Lírico"
-      const prompt = `Actúa como 'Maestro Godot Lírico'. Explica el concepto "${gema.nombre}" de forma lírica, evocadora, usando bastantes ejemplos visuales y usando principios de neuroaprendizaje. La explicación debe ser para un principiante.`;
-
-      const contenidoGenerado = await fetchLeccionContent(prompt);
-
-      setLeccionActiva({ nombre: gema.nombre, contenido: contenidoGenerado });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setCargando(false);
-    }
+  const handleGemaClick = (gema) => {
+    setLeccionActiva(gema);
   };
 
-  // 4. Función para volver a la lista de gemas
   const volverALista = () => {
     setLeccionActiva(null);
-    setError(null);
   };
 
-  // 5. Renderizado Lógico
-  const renderContent = () => {
-    if (cargando) {
+  // 2. NUEVA FUNCIÓN: El Parser Visual
+  const parsearContenido = (texto) => {
+    // Expresión regular para encontrar nuestros placeholders [VISUAL: ...]
+    const regex = /\[VISUAL:(.*?)\]/g;
+    const partes = texto.split(regex);
+
+    return partes.map((parte, index) => {
+      // Si el índice es impar, es una descripción de visual.
+      if (index % 2 === 1) {
+        return (
+          <Box
+            key={index}
+            component="img"
+            src={visualPlaceholder}
+            alt={parte.trim()} // Usamos la descripción como texto alternativo
+            sx={{ width: "100%", borderRadius: 2, my: 2 }}
+          />
+        );
+      }
+      // Si el índice es par, es texto normal.
       return (
-        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-          <CircularProgress />
-        </Box>
+        <Typography
+          key={index}
+          component="span"
+          variant="body1"
+          sx={{ whiteSpace: "pre-wrap" }}
+        >
+          {parte}
+        </Typography>
       );
-    }
-    if (error) {
-      return <Alert severity="error">Error del Maestro: {error}</Alert>;
-    }
+    });
+  };
+
+  // Esta función ahora contiene TODA la lógica de qué mostrar.
+  const renderContent = () => {
+    // Caso 1: Hay una lección activa.
     if (leccionActiva) {
       return (
         <>
           <Typography variant="h4" component="h2" gutterBottom>
             {leccionActiva.nombre}
           </Typography>
-          {/* Usamos pre-wrap para respetar los saltos de línea de Gemini */}
-          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+
+          {/* 3. Usamos el parser en lugar de mostrar el texto directamente */}
+          <Box>{parsearContenido(leccionActiva.contenido)}</Box>
+
+          <Typography
+            component="div"
+            variant="body1"
+            sx={{ whiteSpace: "pre-wrap" }}
+          >
             {leccionActiva.contenido}
           </Typography>
           <Button onClick={volverALista} sx={{ mt: 2 }}>
@@ -74,6 +83,8 @@ const VisorLeccion = ({ reino }) => {
         </>
       );
     }
+
+    // Caso 2: No hay lección activa, PERO SÍ hay un reino activo.
     if (reino) {
       return (
         <>
@@ -95,7 +106,8 @@ const VisorLeccion = ({ reino }) => {
         </>
       );
     }
-    // Estado por defecto (ningún reino seleccionado)
+
+    // Caso 3 (por defecto): No hay ni lección ni reino activo.
     return (
       <>
         <Typography variant="h4" component="h2" gutterBottom>
@@ -108,16 +120,13 @@ const VisorLeccion = ({ reino }) => {
     );
   };
 
+  // El return principal ahora es súper limpio.
   return (
     <Card
-      sx={{
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        minHeight: 0,
-      }}
+      sx={{ ...sx, display: "flex", flexDirection: "column", minHeight: 0 }}
     >
       <CardContent sx={{ p: 4, overflowY: "auto" }}>
+        {/* Simplemente llamamos a la función que decide qué renderizar */}
         {renderContent()}
       </CardContent>
     </Card>
