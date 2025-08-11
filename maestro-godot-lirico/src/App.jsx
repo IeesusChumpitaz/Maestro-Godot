@@ -4,8 +4,9 @@ import Header from "./components/Header";
 import TimelineProgreso from "./components/TimelineProgreso";
 import PanelUsuario from "./components/PanelUsuario";
 import VisorLeccion from "./components/VisorLeccion";
-import SelectorEspecializacion from "./components/SelectorEspecializacion"; // Importamos el nuevo componente
+import SelectorEspecializacion from "./components/SelectorEspecializacion";
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useQuery } from './hooks/useQuery'; // Importamos el nuevo hook
 import { syllabus } from './data/syllabusData';
 
 const style = {
@@ -22,7 +23,7 @@ const style = {
 
 function App() {
   const [panelAbierto, setPanelAbierto] = useState(true);
-  const [vistaActual, setVistaActual] = useState('viaje'); // 'viaje' o 'especializacion'
+  const [vistaActual, setVistaActual] = useState('viaje');
   const [progresoUsuario, setProgresoUsuario] = useLocalStorage('progreso-usuario', {
     puntos: 0,
     gemasCompletadas: [],
@@ -33,6 +34,9 @@ function App() {
   const [siguienteGemaId, setSiguienteGemaId] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [proximaLeccion, setProximaLeccion] = useState(null);
+
+  const query = useQuery();
+  const isDevMode = query.get('dev') === 'true';
 
   useEffect(() => {
     let proximaGemaId = null;
@@ -73,7 +77,7 @@ function App() {
                 ...prev,
                 reinosDesbloqueados: [...prev.reinosDesbloqueados, proximoReino.reinoId]
             }));
-        } else if (!proximoReino) { // Si no hay próximo reino, es el final del tronco común
+        } else if (!proximoReino) {
             console.log("¡Tronco común completado! Pasando a la selección de especialización.");
             setVistaActual('especializacion');
         }
@@ -94,20 +98,14 @@ function App() {
       const nuevosPuntos = progresoUsuario.puntos + 10;
       const nuevasGemas = [...progresoUsuario.gemasCompletadas, gemaId];
       
-      // Actualizamos el estado y luego comprobamos si se desbloquea algo
-      // Usamos una función callback en setProgresoUsuario para asegurar que checkDesbloqueoReino se ejecute con el estado más reciente
-      setProgresoUsuario(prev => {
-          const nuevoProgreso = {
+      setProgresoUsuario(prev => ({
             ...prev,
             puntos: nuevosPuntos,
             gemasCompletadas: nuevasGemas
-          };
-          // Llamamos a la comprobación desde aquí
-          checkDesbloqueoReino(gemaId, nuevasGemas);
-          return nuevoProgreso;
-      });
+        }));
 
-      // Lógica del modal
+      checkDesbloqueoReino(gemaId, nuevasGemas);
+
       let proximaGema = null;
       let proximaGemaEncontrada = false;
       for (const reino of syllabus) {
@@ -140,6 +138,15 @@ function App() {
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden', minHeight: 0 }}>
         <PanelUsuario abierto={panelAbierto} progresoUsuario={progresoUsuario} />
         <Box component="main" sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
+          {isDevMode && vistaActual === 'viaje' && (
+            <Button 
+              variant="contained" 
+              onClick={() => setVistaActual('especializacion')}
+              sx={{ mb: 2 }}
+            >
+              Ir a Especialización (DEBUG)
+            </Button>
+          )}
           {vistaActual === 'viaje' ? (
             <>
               <TimelineProgreso 
