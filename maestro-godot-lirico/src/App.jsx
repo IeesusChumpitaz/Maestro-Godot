@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import TimelineProgreso from "./components/TimelineProgreso";
 import PanelUsuario from "./components/PanelUsuario";
 import VisorLeccion from "./components/VisorLeccion";
+import SelectorEspecializacion from "./components/SelectorEspecializacion"; // Importamos el nuevo componente
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { syllabus } from './data/syllabusData';
 
@@ -21,6 +22,7 @@ const style = {
 
 function App() {
   const [panelAbierto, setPanelAbierto] = useState(true);
+  const [vistaActual, setVistaActual] = useState('viaje'); // 'viaje' o 'especializacion'
   const [progresoUsuario, setProgresoUsuario] = useLocalStorage('progreso-usuario', {
     puntos: 0,
     gemasCompletadas: [],
@@ -33,10 +35,8 @@ function App() {
   const [proximaLeccion, setProximaLeccion] = useState(null);
 
   useEffect(() => {
-    // Determina cuál es la siguiente gema a completar en general
     let proximaGemaId = null;
     for (const reino of syllabus) {
-      // Solo buscamos en reinos desbloqueados
       if (progresoUsuario.reinosDesbloqueados.includes(reino.reinoId)) {
         for (const gema of reino.gemas) {
           if (!progresoUsuario.gemasCompletadas.includes(gema.id)) {
@@ -49,7 +49,6 @@ function App() {
     }
     setSiguienteGemaId(proximaGemaId);
 
-    // Al cargar la app, si no hay un reino activo, establece el que contiene la proxima gema
     if (!reinoActivo && proximaGemaId) {
         const reinoDeProximaGema = syllabus.find(r => r.gemas.some(g => g.id === proximaGemaId));
         if(reinoDeProximaGema) {
@@ -60,9 +59,6 @@ function App() {
   }, [progresoUsuario, reinoActivo]);
 
   const checkDesbloqueoReino = (gemaId, nuevasGemasCompletadas) => {
-    const gemaActual = syllabus.flatMap(r => r.gemas).find(g => g.id === gemaId);
-    if (!gemaActual) return;
-
     const reinoDeLaGema = syllabus.find(r => r.gemas.some(g => g.id === gemaId));
     if (!reinoDeLaGema) return;
 
@@ -71,11 +67,15 @@ function App() {
     if (todasLasGemasDelReinoCompletadas) {
         const indiceReinoActual = syllabus.findIndex(r => r.reinoId === reinoDeLaGema.reinoId);
         const proximoReino = syllabus[indiceReinoActual + 1];
+        
         if (proximoReino && !progresoUsuario.reinosDesbloqueados.includes(proximoReino.reinoId)) {
             setProgresoUsuario(prev => ({
                 ...prev,
                 reinosDesbloqueados: [...prev.reinosDesbloqueados, proximoReino.reinoId]
             }));
+        } else if (!proximoReino) { // Si no hay próximo reino, es el final del tronco común
+            console.log("¡Tronco común completado! Pasando a la selección de especialización.");
+            setVistaActual('especializacion');
         }
     }
   };
@@ -94,15 +94,20 @@ function App() {
       const nuevosPuntos = progresoUsuario.puntos + 10;
       const nuevasGemas = [...progresoUsuario.gemasCompletadas, gemaId];
       
-      setProgresoUsuario(prev => ({
-        ...prev,
-        puntos: nuevosPuntos,
-        gemasCompletadas: nuevasGemas
-      }));
+      // Actualizamos el estado y luego comprobamos si se desbloquea algo
+      // Usamos una función callback en setProgresoUsuario para asegurar que checkDesbloqueoReino se ejecute con el estado más reciente
+      setProgresoUsuario(prev => {
+          const nuevoProgreso = {
+            ...prev,
+            puntos: nuevosPuntos,
+            gemasCompletadas: nuevasGemas
+          };
+          // Llamamos a la comprobación desde aquí
+          checkDesbloqueoReino(gemaId, nuevasGemas);
+          return nuevoProgreso;
+      });
 
-      checkDesbloqueoReino(gemaId, nuevasGemas);
-
-      // Find the next lesson to show in the modal
+      // Lógica del modal
       let proximaGema = null;
       let proximaGemaEncontrada = false;
       for (const reino of syllabus) {
@@ -135,21 +140,27 @@ function App() {
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden', minHeight: 0 }}>
         <PanelUsuario abierto={panelAbierto} progresoUsuario={progresoUsuario} />
         <Box component="main" sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
-          <TimelineProgreso 
-            syllabus={syllabus}
-            reinoActivo={reinoActivo}
-            onReinoSelect={handleReinoSelect}
-            reinosDesbloqueados={progresoUsuario.reinosDesbloqueados}
-          />
-          <VisorLeccion 
-            reino={reinoActivo} 
-            leccionActiva={leccionActiva}
-            onGemaClick={handleGemaClick}
-            siguienteGemaId={siguienteGemaId}
-            sx={{ flexGrow: 1, mt: 3, minHeight: 0 }}
-            gemasCompletadas={progresoUsuario.gemasCompletadas}
-            onGemaCompletada={handleGemaCompletada}
-          />
+          {vistaActual === 'viaje' ? (
+            <>
+              <TimelineProgreso 
+                syllabus={syllabus}
+                reinoActivo={reinoActivo}
+                onReinoSelect={handleReinoSelect}
+                reinosDesbloqueados={progresoUsuario.reinosDesbloqueados}
+              />
+              <VisorLeccion 
+                reino={reinoActivo} 
+                leccionActiva={leccionActiva}
+                onGemaClick={handleGemaClick}
+                siguienteGemaId={siguienteGemaId}
+                sx={{ flexGrow: 1, mt: 3, minHeight: 0 }}
+                gemasCompletadas={progresoUsuario.gemasCompletadas}
+                onGemaCompletada={handleGemaCompletada}
+              />
+            </>
+          ) : (
+            <SelectorEspecializacion />
+          )}
         </Box>
       </Box>
       <Modal
