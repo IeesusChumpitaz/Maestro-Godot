@@ -10,8 +10,8 @@ import {
   ListItemText,
   Button,
 } from "@mui/material";
-// 1. Importamos nuestra imagen de prueba
 import visualPlaceholder from "../assets/placeholder.png";
+import PanelPreguntas from './PanelPreguntas'; // 1. Importamos el componente de preguntas
 
 const VisorLeccion = ({ reino, sx }) => {
   const [leccionActiva, setLeccionActiva] = useState(null);
@@ -24,26 +24,25 @@ const VisorLeccion = ({ reino, sx }) => {
     setLeccionActiva(null);
   };
 
-  // 2. NUEVA FUNCIÓN: El Parser Visual
   const parsearContenido = (texto) => {
-    // Expresión regular para encontrar nuestros placeholders [VISUAL: ...]
+    // Guardia por si una gema aún no tiene contenido
+    if (!texto) return <Typography>Contenido próximamente...</Typography>;
+
     const regex = /\[VISUAL:(.*?)\]/g;
     const partes = texto.split(regex);
 
     return partes.map((parte, index) => {
-      // Si el índice es impar, es una descripción de visual.
       if (index % 2 === 1) {
         return (
           <Box
             key={index}
             component="img"
             src={visualPlaceholder}
-            alt={parte.trim()} // Usamos la descripción como texto alternativo
+            alt={parte.trim()}
             sx={{ width: "100%", borderRadius: 2, my: 2 }}
           />
         );
       }
-      // Si el índice es par, es texto normal.
       return (
         <Typography
           key={index}
@@ -57,9 +56,7 @@ const VisorLeccion = ({ reino, sx }) => {
     });
   };
 
-  // Esta función ahora contiene TODA la lógica de qué mostrar.
   const renderContent = () => {
-    // Caso 1: Hay una lección activa.
     if (leccionActiva) {
       return (
         <>
@@ -67,24 +64,18 @@ const VisorLeccion = ({ reino, sx }) => {
             {leccionActiva.nombre}
           </Typography>
 
-          {/* 3. Usamos el parser en lugar de mostrar el texto directamente */}
           <Box>{parsearContenido(leccionActiva.contenido)}</Box>
 
-          <Typography
-            component="div"
-            variant="body1"
-            sx={{ whiteSpace: "pre-wrap" }}
-          >
-            {leccionActiva.contenido}
-          </Typography>
-          <Button onClick={volverALista} sx={{ mt: 2 }}>
+          {/* 2. Integramos el panel de preguntas aquí */}
+          <PanelPreguntas pregunta={leccionActiva.pregunta} />
+
+          <Button onClick={volverALista} sx={{ mt: 4 }}>
             Volver a las Gemas
           </Button>
         </>
       );
     }
 
-    // Caso 2: No hay lección activa, PERO SÍ hay un reino activo.
     if (reino) {
       return (
         <>
@@ -107,7 +98,6 @@ const VisorLeccion = ({ reino, sx }) => {
       );
     }
 
-    // Caso 3 (por defecto): No hay ni lección ni reino activo.
     return (
       <>
         <Typography variant="h4" component="h2" gutterBottom>
@@ -120,13 +110,11 @@ const VisorLeccion = ({ reino, sx }) => {
     );
   };
 
-  // El return principal ahora es súper limpio.
   return (
     <Card
       sx={{ ...sx, display: "flex", flexDirection: "column", minHeight: 0 }}
     >
       <CardContent sx={{ p: 4, overflowY: "auto" }}>
-        {/* Simplemente llamamos a la función que decide qué renderizar */}
         {renderContent()}
       </CardContent>
     </Card>
