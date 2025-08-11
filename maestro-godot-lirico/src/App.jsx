@@ -33,33 +33,31 @@ function App() {
   const [proximaLeccion, setProximaLeccion] = useState(null);
 
   useEffect(() => {
+    // Determina cuál es la siguiente gema a completar en general
     let proximaGemaId = null;
     for (const reino of syllabus) {
-        if (!progresoUsuario.reinosDesbloqueados.includes(reino.reinoId)) continue;
+      // Solo buscamos en reinos desbloqueados
+      if (progresoUsuario.reinosDesbloqueados.includes(reino.reinoId)) {
         for (const gema of reino.gemas) {
-            if (!progresoUsuario.gemasCompletadas.includes(gema.id)) {
-                proximaGemaId = gema.id;
-                break;
-            }
+          if (!progresoUsuario.gemasCompletadas.includes(gema.id)) {
+            proximaGemaId = gema.id;
+            break;
+          }
         }
-        if (proximaGemaId) break;
+      }
+      if (proximaGemaId) break;
     }
     setSiguienteGemaId(proximaGemaId);
 
-    if (!leccionActiva && proximaGemaId) {
-        let gemaParaMostrar = null;
-        for (const reino of syllabus) {
-            const encontrada = reino.gemas.find(g => g.id === proximaGemaId);
-            if (encontrada) {
-                gemaParaMostrar = encontrada;
-                setReinoActivo(reino);
-                setLeccionActiva(gemaParaMostrar);
-                break;
-            }
+    // Al cargar la app, si no hay un reino activo, establece el que contiene la proxima gema
+    if (!reinoActivo && proximaGemaId) {
+        const reinoDeProximaGema = syllabus.find(r => r.gemas.some(g => g.id === proximaGemaId));
+        if(reinoDeProximaGema) {
+            setReinoActivo(reinoDeProximaGema);
         }
     }
 
-  }, [progresoUsuario, leccionActiva]);
+  }, [progresoUsuario, reinoActivo]);
 
   const checkDesbloqueoReino = (gemaId, nuevasGemasCompletadas) => {
     const gemaActual = syllabus.flatMap(r => r.gemas).find(g => g.id === gemaId);
