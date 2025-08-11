@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Godot documentation for context, not part of the project source
+/src/data/godot-docs-html-stable.zip
+/src/data/godot-docs-html-stable/
