@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,26 +11,31 @@ import {
   Button,
 } from "@mui/material";
 import visualPlaceholder from "../assets/placeholder.png";
-import PanelPreguntas from './PanelPreguntas'; // 1. Importamos el componente de preguntas
+import PanelPreguntas from './PanelPreguntas';
 
-const VisorLeccion = ({ reino, sx }) => {
-  const [leccionActiva, setLeccionActiva] = useState(null);
+const VisorLeccion = ({ 
+    reino, 
+    sx, 
+    gemasCompletadas, 
+    onGemaCompletada,
+    leccionActiva,
+    onGemaClick,
+    siguienteGemaId
+}) => {
+  const [modoQuiz, setModoQuiz] = useState(false);
 
-  const handleGemaClick = (gema) => {
-    setLeccionActiva(gema);
-  };
+  useEffect(() => {
+    setModoQuiz(false);
+  }, [leccionActiva]);
 
   const volverALista = () => {
-    setLeccionActiva(null);
+    onGemaClick(null);
   };
 
   const parsearContenido = (texto) => {
-    // Guardia por si una gema aún no tiene contenido
     if (!texto) return <Typography>Contenido próximamente...</Typography>;
-
     const regex = /\[VISUAL:(.*?)\]/g;
     const partes = texto.split(regex);
-
     return partes.map((parte, index) => {
       if (index % 2 === 1) {
         return (
@@ -56,6 +61,11 @@ const VisorLeccion = ({ reino, sx }) => {
     });
   };
 
+  const handleQuizCompleto = () => {
+    onGemaCompletada(leccionActiva.id);
+    // Maybe open a modal here in the future
+  };
+
   const renderContent = () => {
     if (leccionActiva) {
       return (
@@ -64,10 +74,19 @@ const VisorLeccion = ({ reino, sx }) => {
             {leccionActiva.nombre}
           </Typography>
 
-          <Box>{parsearContenido(leccionActiva.contenido)}</Box>
-
-          {/* 2. Integramos el panel de preguntas aquí */}
-          <PanelPreguntas pregunta={leccionActiva.pregunta} />
+          {modoQuiz ? (
+            <PanelPreguntas 
+              preguntas={leccionActiva.preguntas}
+              onQuizCompleto={handleQuizCompleto}
+            />
+          ) : (
+            <>
+              <Box>{parsearContenido(leccionActiva.contenido)}</Box>
+              <Button variant="contained" onClick={() => setModoQuiz(true)} sx={{ mt: 4 }}>
+                Comenzar Prueba
+              </Button>
+            </>
+          )}
 
           <Button onClick={volverALista} sx={{ mt: 4 }}>
             Volver a las Gemas
@@ -83,16 +102,35 @@ const VisorLeccion = ({ reino, sx }) => {
             Reino: {reino.nombre}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            Selecciona una Gema:
+            Selecciona una Gema para comenzar tu viaje o repasar lo aprendido:
           </Typography>
           <List dense>
-            {reino.gemas.map((gema) => (
-              <ListItem key={gema.id} disablePadding>
-                <ListItemButton onClick={() => handleGemaClick(gema)}>
-                  <ListItemText primary={gema.nombre} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+            {reino.gemas.map((gema) => {
+              const estaCompletada = gemasCompletadas.includes(gema.id);
+              const esSiguiente = gema.id === siguienteGemaId;
+              const isClickable = estaCompletada || esSiguiente;
+
+              return (
+                <ListItem key={gema.id} disablePadding>
+                  <ListItemButton 
+                    onClick={() => isClickable && onGemaClick(gema)}
+                    disabled={!isClickable}
+                    sx={{ 
+                        pl: 2, 
+                        borderLeft: esSiguiente ? '4px solid' : '4px solid transparent',
+                        borderColor: esSiguiente ? 'primary.main' : 'transparent'
+                    }}
+                  >
+                    <ListItemText 
+                        primary={gema.nombre} 
+                        secondary={!isClickable ? "Bloqueada" : (estaCompletada ? "Completada" : "Siguiente lección")}
+                    />
+                    {estaCompletada && ' ✅'}
+                    {!estaCompletada && !esSiguiente && ' 🔒'}
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
         </>
       );
@@ -104,7 +142,7 @@ const VisorLeccion = ({ reino, sx }) => {
           El Crisol del Conocimiento
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Selecciona un Reino para desvelar sus Gemas.
+          Selecciona un Reino en la línea de tiempo para comenzar tu aventura.
         </Typography>
       </>
     );

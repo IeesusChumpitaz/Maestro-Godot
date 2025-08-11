@@ -10,214 +10,282 @@ export const syllabus = [
       {
         id: 101,
         nombre: "El Portal de Proyectos: Tu Primera Decisión",
-        contenido: `Antes de esculpir mundos, debes elegir el terreno. El **Gestor de Proyectos** es tu portal, el umbral donde cada gran aventura comienza. Aquí verás tus creaciones pasadas y podrás dar a luz a nuevas. Al pulsar 'Nuevo Proyecto', no solo nombras un universo, sino que eliges un sagrado lugar en tu disco duro donde residirán todos sus secretos y tesoros. ¡Elige con sabiduría, pues esta carpeta será el cofre de tu juego!\n\nTras nombrar tu creación, te enfrentas a una elección crucial: el **Renderizador**. Piensa en ello como elegir el alma visual de tu mundo. ¿Buscas la máxima fidelidad gráfica para PC con efectos deslumbrantes? **Forward+** es tu senda. ¿Tu destino son los móviles, donde la agilidad es reina? **Mobile** es tu aliado. ¿O anhelas la más amplia compatibilidad con hardware antiguo? Elige **Compatibility**. Esta decisión define la paleta con la que pintarás.\n\n[VISUAL: Un GIF mostrando la ventana del Gestor de Proyectos. El cursor hace clic en 'Nuevo Proyecto', escribe un nombre, selecciona una carpeta, y luego duda entre las tres opciones de renderizador (Forward+, Mobile, Compatibility) con un tooltip explicando brevemente cada una.]`,
-        pregunta: {
-          tipo: "seleccion_multiple",
-          enunciado:
-            "Estás creando un juego para un concurso de 'retro-gaming' que debe funcionar en ordenadores muy antiguos. ¿Qué renderizador sería la elección más sabia y segura?",
-          opciones: ["Forward+", "Mobile", "Compatibility", "Ultra HD"],
-          respuestaCorrecta: "Compatibility",
-        },
+        contenido: `Cuando invocas a Godot, el primer portal que atraviesas es el **Gestor de Proyectos**. No es un mero listado, ¡es tu galería de universos! Aquí puedes crear nuevos proyectos, importar existentes, o incluso descargar plantillas y demos para encender tu chispa creativa.
+
+**Creando un Nuevo Proyecto:**
+Al pulsar "Nuevo Proyecto", se te pedirá un nombre para tu creación y una ruta para la carpeta del proyecto. ¡Un consejo de maestro! Elige una ruta y crea una nueva carpeta vacía para tu proyecto. No selecciones una carpeta que ya contenga otros archivos. Todo lo que tu proyecto contenga estará dentro de esta carpeta, manteniendo tu reino en perfecto orden.
+
+**La Elección del Renderizador:**
+Una vez nombrado tu universo, te enfrentas a una elección crucial: el **Renderizador**. Esta decisión define el alma visual de tu mundo.
+- **Forward+**: La senda del esplendor visual. Ideal para juegos de escritorio de alta fidelidad (PC y consolas) que buscan los mejores gráficos. Utiliza la API Vulkan (o Direct3D 12 en Windows). Es el más avanzado, pero requiere hardware moderno.
+- **Mobile**: El camino de la agilidad. Optimizado para dispositivos móviles y hardware menos potente. Ofrece un excelente rendimiento y es una buena opción para juegos 2D y 3D que no necesitan los efectos más complejos.
+- **Compatibility**: El puente hacia el pasado y la web. Utiliza OpenGL 3.3 / OpenGL ES 3.0, lo que le permite funcionar en una gama muy amplia de hardware, incluyendo ordenadores antiguos y navegadores web (WebXR). Su calidad gráfica es menor, pero su compatibilidad es máxima.
+
+Elige con sabiduría. Aunque esta decisión se puede cambiar más adelante en los Ajustes del Proyecto, establecerla desde el principio te dará una base sólida sobre la que construir.`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado:
+              "Estás creando un juego para un concurso de 'retro-gaming' que debe funcionar en ordenadores muy antiguos. ¿Qué renderizador sería la elección más sabia y segura?",
+            opciones: ["Forward+", "Mobile", "Compatibility", "Ultra HD"],
+            respuestaCorrecta: "Compatibility",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "El Gestor de Proyectos de Godot solo te permite trabajar en un proyecto a la vez.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+          {
+            tipo: "rellenar_espacio",
+            enunciado: "Para crear un juego con gráficos de alta fidelidad para PC, ¿qué renderizador es el más recomendado?",
+            opciones: ["Mobile", "Compatibility", "Forward+", "OpenGL"],
+            respuestaCorrecta: "Forward+",
+          },
+        ],
       },
       {
         id: 102,
         nombre: "¿Qué es un Motor de Juegos?",
-        contenido: `¡Bienvenidos, aprendices de la creación digital, al teatro de la mente, donde la magia del código cobra vida! Yo, Maestro Godot Lírico, os guiaré por el fascinante misterio: ¿Qué es un motor de juegos?\n\nImaginad un títere. Hermoso, articulado, pero inerte. Necesita hilos, una mano que lo mueva, un escenario donde bailar. El motor de juegos es todo eso y mucho más. Es el universo invisible que da vida a vuestros sueños digitales.\n\n[VISUAL: Un diagrama animado simple que muestra un personaje de videojuego en una pantalla. Flechas salen de él apuntando a iconos que representan 'Física', 'Gráficos', 'Sonido' y 'Lógica de Juego', mostrando que el 'Motor' lo gestiona todo.]\n\nLa **Física**, la gravedad del ser: Imaginad una manzana cayendo de un árbol. El motor dicta cómo cae, cómo rebota, cómo interactúa con el suelo. Es la fuerza invisible que rige el movimiento y las colisiones en vuestro mundo.\n\nEl **Renderizado**, la luz que revela: Pensad en un amanecer. La luz baña el paisaje, revelando texturas, colores, sombras. El motor es el sol virtual que ilumina vuestro mundo, creando la ilusión de la realidad.\n\n[VISUAL: Una imagen comparativa. A la izquierda, una escena 3D con modelos sin texturas ni luz ('Sin Renderizar'). A la derecha, la misma escena con iluminación, sombras y texturas vibrantes ('Renderizado').]\n\nLa **Lógica de Juego**, la chispa de la vida: Es el guion que siguen los actores. Define las reglas de vuestro universo, las acciones del jugador y el comportamiento de los personajes. Es la inteligencia que da propósito a cada elemento.`,
-        pregunta: {
-          tipo: "seleccion_multiple",
-          enunciado:
-            "Si estás diseñando un puzzle donde diferentes objetos deben caer y encajar correctamente según su peso y forma, ¿qué componente fundamental del motor de juego estás utilizando principalmente?",
-          opciones: [
-            "El sistema de Renderizado para hacer que los objetos brillen.",
-            "El sistema de Lógica de Juego para contar la puntuación.",
-            "El sistema de Física para simular el peso y las colisiones.",
-            "El sistema de Audio para reproducir música de fondo.",
-          ],
-          respuestaCorrecta:
-            "El sistema de Física para simular el peso y las colisiones.",
-        },
+        contenido: `Un motor de juegos es una compleja pieza de software diseñada para crear y ejecutar videojuegos. ¡Es tu taller de artesano digital! En lugar de empezar desde un lienzo en blanco, un motor como Godot te proporciona un conjunto de herramientas robustas y reutilizables.
+
+Imagina construir un coche. Podrías empezar por fundir el metal para el chasis, fabricar cada tornillo y tejer cada cable. O podrías empezar con un chasis, un motor y ruedas ya fabricados. Un motor de juegos es esto último. Se encarga de las tareas más complejas y comunes para que tú puedas centrarte en lo que hace a tu juego único: la jugabilidad, la historia y el arte.
+
+**¿Qué es Godot en esencia?**
+Godot es un motor de juegos 2D y 3D, todo en uno y de código abierto. Su filosofía se centra en la flexibilidad y en un sistema de "escenas y nodos" que te permite construir tu juego pieza a pieza, como si fueran bloques de construcción digitales.
+
+**Los Pilares de la Creación en Godot:**
+- **El Motor de Renderizado**: Es el gran ilusionista. Toma tus modelos 3D, sprites 2D, luces y materiales, y los traduce en la imagen final que ves en la pantalla. Es el responsable de la belleza visual de tu mundo.
+- **El Motor de Física**: Es el que impone las leyes del movimiento. Cuando tu personaje salta, cuando una torre se derrumba o una bola de fuego choca, el motor de física calcula las interacciones, la gravedad y las colisiones para que el mundo se sienta real y consistente.
+- **El Sistema de Scripting**: ¡Aquí es donde insufles vida! A través de GDScript (un lenguaje amigable similar a Python) o C#, escribes las reglas de tu juego. ¿Qué pasa cuando el jugador pulsa un botón? ¿Cómo se comporta un enemigo? La lógica que escribes es el guion que todos los actores de tu escenario seguirán.
+- **Y Mucho Más**: Godot también te ofrece herramientas para crear interfaces de usuario (UI), gestionar animaciones, reproducir sonidos y música, comunicarte a través de la red, y un sinfín de funcionalidades más. ¡Es un verdadero ejército de herramientas a tu disposición!`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado:
+              "Si estás diseñando un puzzle donde diferentes objetos deben caer y encajar correctamente según su peso y forma, ¿qué componente del motor estás usando principalmente?",
+            opciones:
+              [
+                "El sistema de Renderizado para hacer que los objetos brillen.",
+                "El sistema de Lógica de Juego para contar la puntuación.",
+                "El sistema de Física para simular el peso y las colisiones.",
+                "El sistema de Audio para reproducir música de fondo.",
+              ],
+            respuestaCorrecta:
+              "El sistema de Física para simular el peso y las colisiones.",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "La 'Lógica de Juego' es la responsable de que los gráficos se vean realistas con luces y sombras.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "Para definir las reglas y el comportamiento de los personajes, ¿qué pilar de Godot usarías?",
+            opciones: ["Motor de Renderizado", "Motor de Física", "Sistema de Scripting", "Editor de Escenas"],
+            respuestaCorrecta: "Sistema de Scripting",
+          },
+        ],
       },
       {
         id: 103,
         nombre: "El Lienzo del Creador: Tu Primer Vistazo a Godot",
-        contenido: `¡Bienvenido, artífice de sueños! Ante ti se despliega Godot, no como un simple programa, sino como el taller del alquimista. Al abrirlo, no te abrumes por la multitud de paneles; son tus herramientas, tus pinceles, tus aliados.\n\nObserva el corazón palpitante: el **Viewport** o Escenario Principal. Este es tu lienzo en blanco. A su izquierda, como el árbol genealógico de tu mundo, se encuentra la dársena de **Escena**. Aquí, cada elemento es un 'nodo'. A la izquierda abajo, yace el cofre del tesoro: la dársena del **Sistema de Archivos**, tu almacén de recursos. Y a la derecha, el **Inspector**, tu lupa mágica que revela y te permite moldear las propiedades de cada elemento.\n\n[VISUAL: Un GIF que muestra la interfaz de Godot. Un cursor resalta secuencialmente: 1. El Viewport central. 2. La dársena de Escena. 3. La dársena del Sistema de Archivos. 4. La dársena del Inspector.]`,
-        pregunta: {
-          tipo: "rellenar_espacio",
-          enunciado: "Para modificar las propiedades de un nodo seleccionado, como su velocidad o color, debes usar la Dársena del ________.",
-          respuestaCorrecta: "Inspector"
-        },
+        contenido: `¡Contempla el taller del creador! Al abrir un proyecto, te adentras en el editor de Godot. Puede parecer intimidante, pero cada panel tiene un propósito y pronto lo verás como una extensión de tus propias manos.
+
+**El Espacio de Trabajo Principal:**
+En la parte superior, encontrarás la barra de menús, los espacios de trabajo (2D, 3D, Script, AssetLib) y los botones para probar tu juego.
+
+**Las Dársenas (Docks):**
+Son los paneles que rodean el área central. ¡Puedes moverlas, redimensionarlas y acoplarlas como quieras!
+- **La Dársena de Escena (izquierda)**: Aquí verás la estructura jerárquica de tu escena actual. Cada elemento de tu juego (personajes, luces, obstáculos) es un **nodo**, y aquí verás cómo se organizan en un árbol familiar. También encontrarás la pestaña "Importar" aquí después de seleccionar un asset.
+- **La Dársena del Sistema de Archivos (abajo a la izquierda)**: Este es tu cofre del tesoro. Muestra todos los archivos de tu proyecto: scripts, imágenes, sonidos, escenas guardadas... todo tu arsenal creativo está aquí. ¡Arrastra y suelta desde aquí al Viewport o al Inspector!
+- **El Inspector (derecha)**: Esta es tu lupa mágica. Cuando seleccionas un nodo en la Dársena de Escena, el Inspector te muestra todas sus propiedades: su posición, su color, su velocidad, y cientos de otros atributos que puedes modificar. También es donde conectarás **señales** (eventos) de un nodo a otro.
+- **El Panel Inferior**: Este panel contextual es un camaleón. Aquí encontrarás la consola de **Salida** (para ver mensajes de tu juego), el editor de **Animaciones**, el mezclador de **Audio** y otras herramientas que aparecerán cuando las necesites.
+
+**El Viewport (Centro):**
+Es tu lienzo, tu ventana al mundo que estás creando. Aquí manipularás directamente tus objetos de juego, ya sea en el plano 2D o en el espacio 3D. ¡Es donde la magia cobra vida!`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "Para modificar las propiedades de un nodo seleccionado, como su posición o color, ¿qué Dársena debes usar?",
+            opciones: ["Dársena de Escena", "Sistema de Archivos", "Inspector", "Viewport"],
+            respuestaCorrecta: "Inspector"
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "¿Qué panel usarías para buscar y cargar una imagen que has guardado en la carpeta de tu proyecto?",
+            opciones: ["Inspector", "Dársena de Escena", "Sistema de Archivos", "Viewport"],
+            respuestaCorrecta: "Sistema de Archivos",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "El Viewport es donde escribes el código GDScript para tus nodos.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+        ],
       },
       {
         id: 104,
         nombre: "2D y 3D: Eligiendo tu Dimensión",
-        contenido: `Todo mundo tiene sus dimensiones. En Godot, eres el maestro de dos realidades: el plano y el espacio. La **creación en 2D** es como ser un pintor sobre un lienzo infinito. Tus coordenadas son X (horizontal) e Y (vertical). Es el reino de los platformers, los RPGs cenitales y los puzzles. Aquí, los nodos se dibujan en orden, uno encima del otro, como capas de acetato en una mesa de animación.\n\nLa **creación en 3D**, sin embargo, es el arte del escultor. Añades una tercera coordenada, Z, que te da la profundidad, el alma del espacio. Ya no pintas, sino que colocas formas en un universo tangible. Es el reino de las aventuras en primera persona, los juegos de carreras y los mundos explorables. La luz y la sombra danzan de formas complejas, y la cámara es tu ojo en este nuevo y vasto cosmos.\n\n[VISUAL: Una imagen dividida. A la izquierda, la interfaz 2D de Godot con un personaje de sprite y un fondo plano. A la derecha, la interfaz 3D con un personaje modelado, un suelo y una luz, mostrando los gizmos de 3 ejes.]`,
-        pregunta: {
-          tipo: "verdadero_falso",
-          enunciado:
-            "En el espacio 2D, el eje Y generalmente representa la profundidad para saber si un objeto está delante o detrás de otro.",
-          opciones: ["Verdadero", "Falso"],
-          respuestaCorrecta: "Falso",
-        },
+        contenido: `En Godot, eres el maestro de dos realidades: el plano (2D) y el espacio (3D). La **creación en 2D** es como ser un pintor. Tus coordenadas son X (horizontal) e Y (vertical). Es el reino de los platformers y los RPGs cenitales.
+
+La **creación en 3D** es el arte del escultor. Añades una tercera coordenada, Z, que te da la profundidad. Es el reino de las aventuras en primera persona y los mundos explorables.`,
+        preguntas: [
+          {
+            tipo: "verdadero_falso",
+            enunciado:
+              "En el espacio 2D, el eje Y generalmente representa la profundidad.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "Si estás creando un juego de plataformas en 2D, ¿cuáles son los dos ejes principales con los que trabajarás?",
+            opciones: ["X y Z", "Y y Z", "X e Y", "Solo X"],
+            respuestaCorrecta: "X e Y",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "En un entorno 3D, ¿cómo se llama el eje que comúnmente representa la profundidad?",
+            opciones: ["Eje X", "Eje Y", "Eje Z", "Eje W"],
+            respuestaCorrecta: "Eje Z",
+          },
+        ],
       },
       {
         id: 105,
         nombre: "Nodos y Escenas: Los Ladrillos de Tu Mundo",
-        contenido: `En el universo de Godot, los átomos de la creación se llaman **Nodos**. Cada nodo es una pieza especializada: uno muestra una imagen (Sprite2D), otro emite un sonido (AudioStreamPlayer), otro detecta colisiones (Area2D). Su verdadera magia se desata cuando los unes en jerarquías, en árboles de creación.\n\n[VISUAL: Un diagrama simple. Un nodo raíz 'Player' (CharacterBody2D). De él dependen como hijos un 'Sprite2D' y un 'CollisionShape2D'. Flechas claras indican la relación padre-hijo.]\n\nCuando has ensamblado una estructura de nodos que te enorgullece, la guardas como una **Escena**. Una escena es un plano, un diseño completo listo para ser fabricado una y otra vez. Creas una escena 'Bala' una vez, y luego puedes 'instanciar' esa escena cientos de veces. Si modificas la escena original, todas las instancias se actualizan. ¡Ese es el poder de las escenas!`,
-        pregunta: {
-          tipo: "verdadero_falso",
-          enunciado:
-            "Para cambiar el sprite de todos los 50 enemigos idénticos que tienes en tu nivel, debes editar cada una de las 50 instancias de enemigo individualmente.",
-          opciones: ["Verdadero", "Falso"],
-          respuestaCorrecta: "Falso",
-        },
+        contenido: `En Godot, los átomos de la creación se llaman **Nodos**. Cada nodo es una pieza especializada: uno muestra una imagen (Sprite2D), otro emite un sonido (AudioStreamPlayer), otro detecta colisiones (Area2D). Su verdadera magia se desata cuando los unes en jerarquías.
+
+Cuando has ensamblado una estructura de nodos, la guardas como una **Escena**. Una escena es un plano, un diseño completo listo para ser reutilizado. Creas una escena 'Bala' una vez, y luego puedes 'instanciar' esa escena cientos de veces. Si modificas la escena original, todas las instancias se actualizan.`,
+        preguntas: [
+          {
+            tipo: "verdadero_falso",
+            enunciado:
+              "Para cambiar el sprite de todos los 50 enemigos idénticos que tienes en tu nivel, debes editar cada una de las 50 instancias de enemigo individualmente.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "¿Qué es una 'Escena' en Godot?",
+            opciones: ["Un único nodo", "Una colección de nodos guardada que puede ser reutilizada", "Un archivo de script", "Una imagen"],
+            respuestaCorrecta: "Una colección de nodos guardada que puede ser reutilizada",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "La mejor práctica para tener 100 balas idénticas es crear 100 nodos de bala individuales uno por uno.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+        ],
       },
       {
         id: 106,
         nombre: "El Árbol de Escena: Jerarquía y Orden Divino",
-        contenido: `Ya conoces los nodos, pero su verdadera sinfonía reside en su organización. El **Árbol de Escena** no es una simple lista, es una genealogía sagrada. Cada nodo puede ser un **padre**, y tener **hijos**. Como un planeta que orbita un sol, el hijo sigue al padre en todas sus transformaciones. Si mueves, rotas o escalas al padre, todos sus hijos danzarán con él en perfecta armonía.\n\nEsta relación es el pilar de la creación de entidades complejas. Un personaje no es un solo nodo; es un padre (quizás un "CharacterBody2D") con hijos que definen su apariencia ("Sprite2D"), su forma de colisión ("CollisionShape2D") y el alcance de su espada ("Area2D"). Todos juntos, como una familia, forman una única y cohesiva unidad.\n\n[VISUAL: Un GIF que muestra un nodo 'NaveEspacial' como padre. El cursor arrastra un nodo 'Propulsor' para hacerlo hijo de la nave. Luego, el cursor selecciona y mueve la 'NaveEspacial', y el 'Propulsor' se mueve junto a ella automáticamente.]\n\nEl orden también es ley, especialmente en 2D. Los nodos se dibujan en el orden en que aparecen en el árbol, de arriba hacia abajo. El último de la lista será el que se dibuje encima de todos los demás. Como un pintor que aplica capas de pintura, el orden de tus nodos determina qué se ve primero. ¡Recuerda este poder para controlar la profundidad visual de tu lienzo!`,
-        pregunta: {
-          tipo: "ordenar_elementos",
-          enunciado: "En 2D, los nodos más abajo en el árbol de escena se dibujan encima. Ordena los siguientes nodos en el árbol para que la 'Puntuacion' se vea sobre el 'Jugador', y el 'Jugador' sobre el 'Fondo'.",
-          elementos: ["Jugador", "Fondo", "Puntuacion"],
-          respuestaCorrecta: ["Fondo", "Jugador", "Puntuacion"]
-        },
+        contenido: `El **Árbol de Escena** es una genealogía sagrada. Cada nodo puede ser un **padre** y tener **hijos**. El hijo sigue al padre en todas sus transformaciones (movimiento, rotación, escala). Esta relación es el pilar de la creación de entidades complejas.
+
+El orden también es ley, especialmente en 2D. Los nodos se dibujan en el orden en que aparecen en el árbol, de arriba hacia abajo. El último de la lista será el que se dibuje encima de todos los demás.`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "En 2D, para que la 'Puntuacion' se vea sobre el 'Jugador', y el 'Jugador' sobre el 'Fondo', ¿cuál debe ser el orden en el árbol de escena (de arriba a abajo)?",
+            opciones:
+                [
+                    "Puntuacion, Jugador, Fondo",
+                    "Fondo, Jugador, Puntuacion",
+                    "Jugador, Fondo, Puntuacion",
+                    "Fondo, Puntuacion, Jugador"
+                ],
+            respuestaCorrecta: "Fondo, Jugador, Puntuacion"
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "Si eliminas un nodo padre, todos sus nodos hijos también serán eliminados.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Verdadero",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "En 2D, ¿qué nodo se dibujará encima de los demás?",
+            opciones: ["El primer nodo en el árbol de escena", "El último nodo en el árbol de escena", "El nodo con el nombre más corto", "El nodo con más hijos"],
+            respuestaCorrecta: "El último nodo en el árbol de escena",
+          },
+        ],
       },
       {
         id: 107,
         nombre: "Assets: Importando Tesoros a Tu Reino",
-        contenido: `Un mundo sin imágenes, sonidos o música es un mundo vacío. Tus **assets** son los tesoros que le darán color y vida. Godot hace que el proceso de importación sea un acto de simple magia. Solo tienes que arrastrar tus archivos desde las carpetas de tu ordenador y soltarlos en la **Dársena del Sistema de Archivos** dentro de Godot.\n\n[VISUAL: Un GIF que muestra una carpeta de explorador de archivos al lado de la ventana de Godot. El cursor arrastra un archivo 'player.png' y 'jump.wav' desde la carpeta y los suelta en la dársena del Sistema de Archivos de Godot. Los archivos aparecen allí.]\n\nUna vez que un tesoro cruza el umbral, Godot lo reclama. Verás que junto a tu "imagen.png", aparece un archivo "imagen.png.import". Este es el sello de Godot, un pergamino que guarda la configuración de cómo debe ser tratado ese asset dentro del motor. ¿Quieres que una imagen se vea nítida como un cristal o pixelada como un juego retro? Lo decides en la **pestaña de Importación** que aparece al seleccionar el asset.\n\nEste cofre de tesoros, el sistema de archivos, es el corazón de tu proyecto. Mantenlo ordenado. Crea carpetas para tus "sprites", tus "sonidos", tus "fuentes". Un reino ordenado es un reino fácil de gobernar. La estructura que crees aquí se reflejará directamente en la carpeta de tu proyecto en el disco duro.`,
-        pregunta: {
-          tipo: "seleccion_multiple",
-          enunciado:
-            "Para usar una imagen que tienes en tu escritorio como el sprite de tu personaje en Godot, ¿a qué panel del editor deberías arrastrarla primero?",
-          opciones: [
-            "La Dársena del Sistema de Archivos",
-            "El Inspector",
-            "La Dársena de Escena",
-            "El Viewport",
-          ],
-          respuestaCorrecta: "La Dársena del Sistema de Archivos",
-        },
+        contenido: `Tus **assets** (imágenes, sonidos, etc.) son los tesoros que le darán vida a tu mundo. Para importarlos, solo tienes que arrastrarlos y soltarlos en la **Dársena del Sistema de Archivos** dentro de Godot.
+
+Cuando importas un asset, Godot crea un archivo ".import" que guarda la configuración de cómo debe ser tratado ese asset. Puedes cambiar esta configuración (por ejemplo, para que una imagen se vea pixelada) en la **pestaña de Importación** que aparece al seleccionar el asset.`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado:
+              "Para usar una imagen que tienes en tu escritorio como el sprite de tu personaje, ¿a qué panel la arrastras primero?",
+            opciones:
+              [
+                "La Dársena del Sistema de Archivos",
+                "El Inspector",
+                "La Dársena de Escena",
+                "El Viewport",
+              ],
+            respuestaCorrecta: "La Dársena del Sistema de Archivos",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "Cuando importas un asset, Godot crea un archivo adicional para la configuración. ¿Cuál es su extensión?",
+            opciones: [".godot", ".asset", ".import", ".meta"],
+            respuestaCorrecta: ".import",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "Es una buena práctica mantener todos tus assets (imágenes, sonidos, etc.) en una sola carpeta gigante.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+        ],
       },
       {
         id: 108,
         nombre: "Ajustes del Proyecto: Las Reglas de Tu Universo",
-        contenido: `Todo universo necesita leyes inmutables. La gravedad, la velocidad de la luz... En tu creación, estas leyes se forjan en el santuario de los **Ajustes del Proyecto** (accesible desde el menú "Proyecto"). Esta ventana es el panel de control cósmico de tu juego, el lugar donde defines las reglas fundamentales que lo gobernarán todo.\n\nAquí, en la sección "Display -> Window", puedes decretar el tamaño de tu mundo visible, si los mortales (jugadores) pueden cambiar el tamaño de la ventana, o si tu creación debe nacer en la gloria de la pantalla completa. Es el marco de tu lienzo, la primera impresión que tu universo dará al mundo.\n\n[VISUAL: Un GIF del cursor yendo a 'Proyecto -> Ajustes del Proyecto...'. La ventana se abre y el cursor navega a la sección 'Display/Window' y cambia los valores de 'Viewport Width' y 'Viewport Height'.]\n\nPero hay más que simples ventanas. Aquí es donde le dices a Godot cuál de tus muchas escenas es la principal, la que debe ser presentada cuando el jugador pulsa 'Jugar'. En "Application -> Run", la propiedad "Main Scene" es el pedestal donde colocarás tu escena inicial. Explora estas catacumbas de opciones, pues aunque muchas son para maestros avanzados, conocer la existencia de estas palancas de poder te convierte en un creador más sabio.`,
-        pregunta: {
-          tipo: "seleccion_multiple",
-          enunciado:
-            "Después de construir tu menú principal en una escena llamada 'MenuPrincipal.tscn', ¿dónde irías para asegurarte de que el juego siempre comience en esa escena?",
-          opciones: [
-            "En el Inspector del nodo raíz del menú.",
-            "En los Ajustes del Proyecto, en la sección 'Application/Run'.",
-            "En el Gestor de Proyectos, antes de abrir el editor.",
-            "En un script adjunto a la cámara.",
-          ],
-          respuestaCorrecta:
-            "En los Ajustes del Proyecto, en la sección 'Application/Run'.",
-        },
-      },
-    ],
-    jefeFinal: {
-      id: 199,
-      nombre: "Jefe Final: El Arquitecto de Escenas",
-      descripcion:
-        "Demuestra tu maestría construyendo una escena simple pero completa a partir de varios nodos y assets importados para desbloquear el siguiente Reino.",
-    },
+        contenido: `Todo universo necesita leyes. En tu creación, estas se forjan en los **Ajustes del Proyecto** (menú Proyecto -> Ajustes del Proyecto). Aquí defines aspectos cruciales:
+
+- **Ventana (Display -> Window)**: Configura el tamaño de la ventana de tu juego, si se puede redimensionar, si empieza en pantalla completa, etc.
+- **Mapas de Entrada (Input Map)**: ¡Fundamental! Aquí defines las acciones del jugador, como 'moverse_izquierda' o 'saltar', y las asocias a teclas, botones del ratón o del mando. Esto te permite escribir código basado en acciones, no en teclas específicas.
+- **Capas de Física (Layer Names)**: Nombrar las capas de física y renderizado hace tu vida más fácil al gestionar colisiones complejas.`,
+        preguntas: [
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "¿Dónde configurarías el tamaño inicial de la ventana de tu juego?",
+            opciones: ["En el Inspector", "En los Ajustes del Proyecto", "En la Dársena de Escena", "Editando un archivo de texto"],
+            respuestaCorrecta: "En los Ajustes del Proyecto",
+          },
+          {
+            tipo: "verdadero_falso",
+            enunciado: "Los 'Input Map' sirven para dibujar el mapa del nivel de tu juego.",
+            opciones: ["Verdadero", "Falso"],
+            respuestaCorrecta: "Falso",
+          },
+          {
+            tipo: "seleccion_multiple",
+            enunciado: "Si quieres que la tecla 'W' haga que el personaje salte, ¿dónde deberías definir esta asociación?",
+            opciones: ["En el script del personaje", "En los Input Map de los Ajustes del Proyecto", "En la configuración del nodo Sprite2D", "En el editor de animaciones"],
+            respuestaCorrecta: "En los Input Map de los Ajustes del Proyecto",
+          },
+        ],
+      }
+    ]
   },
   {
     reinoId: 2,
-    nombre: "El Lenguaje de la Creación: GDScript",
-    nivel: "Principiante",
+    nombre: "El Arte del Movimiento: Scripts y Nodos Dinámicos",
+    nivel: "Básico",
     gemas: [
-      { id: 201, nombre: "GDScript: El Alma de tus Nodos" },
-      {
-        id: 202,
-        nombre: "Variables y Tipos de Datos: La Esencia de la Información",
-      },
-      {
-        id: 203,
-        nombre: "Colecciones: Forjando Listas (Arrays) y Diccionarios",
-      },
-      { id: 204, nombre: "Condicionales: Forjando Destinos con 'if' y 'else'" },
-      { id: 205, nombre: "Bucles: El Ritmo del Juego con 'for' y 'while'" },
-      { id: 206, nombre: "Funciones: Hechizos de Código Reutilizables" },
-      { id: 207, nombre: "Señales: La Danza de la Comunicación entre Nodos" },
-      { id: 208, nombre: "El Arte de Depurar: Encontrando Errores con Gracia" },
-      {
-        id: 209,
-        nombre: "La Biblioteca del Saber: Usando la Documentación de Godot",
-      },
+        // Próximamente...
     ],
-    jefeFinal: {
-      id: 299,
-      nombre: "Jefe Final: El Escriba Interactivo",
-      descripcion:
-        "Crea un script que haga que un personaje reaccione a la entrada del jugador y se comunique con otro nodo a través de señales.",
-    },
-  },
-  {
-    reinoId: 3,
-    nombre: "El Movimiento es Vida: Físicas y Entradas",
-    nivel: "Intermedio",
-    gemas: [
-      { id: 301, nombre: "El Input Map: Traduciendo las Acciones del Jugador" },
-      { id: 302, nombre: "CharacterBody: El Arte del Movimiento (2D y 3D)" },
-      { id: 303, nombre: "RigidBody: Simulando Físicas Dinámicas" },
-      { id: 304, nombre: "StaticBody y Area: Definiendo el Mundo y sus Zonas" },
-      { id: 305, nombre: "RayCasting: Los Ojos Invisibles de tus Creaciones" },
-    ],
-    jefeFinal: {
-      id: 399,
-      nombre: "Jefe Final: El Coreógrafo Cinético",
-      descripcion:
-        "Construye un pequeño nivel de plataformas donde el jugador pueda correr, saltar y colisionar con el entorno.",
-    },
-  },
-  {
-    reinoId: 4,
-    nombre: "El Arte del Conflicto y la Interfaz",
-    nivel: "Avanzado",
-    gemas: [
-      { id: 401, nombre: "UI: Creando Menús y HUDs con Nodos de Control" },
-      { id: 402, nombre: "El Sistema de Animación: Dando Vida a tus Sprites" },
-      { id: 403, nombre: "TileMaps: Construyendo Mundos Vastos y Eficientes" },
-      {
-        id: 404,
-        nombre: "Partículas: Magia Visual para Efectos Deslumbrantes",
-      },
-      { id: 405, nombre: "Shaders: Pintando con Código para Efectos Únicos" },
-    ],
-    jefeFinal: {
-      id: 499,
-      nombre: "Jefe Final: El Artista Total",
-      descripcion:
-        "Crea una escena de juego con una interfaz de usuario funcional (vida, puntuación), un personaje animado y un efecto visual usando partículas o un shader simple.",
-    },
-  },
-  {
-    reinoId: 5,
-    nombre: "La Orquesta de Sonidos y la Gestión Maestra",
-    nivel: "Experto",
-    gemas: [
-      { id: 501, nombre: "El Bus de Audio: Orquestando el Paisaje Sonoro" },
-      {
-        id: 502,
-        nombre:
-          "Autoloads (Singletons): Nodos Globales para Gestionar tu Juego",
-      },
-      {
-        id: 503,
-        nombre: "Guardado y Carga de Partidas: Persistencia de Mundos",
-      },
-      { id: 504, nombre: "Exportando tu Creación: Compartiendo tu Mundo" },
-      { id: 505, nombre: "C++ y GDNative/GDExtension: Expandiendo el Motor" },
-    ],
-    jefeFinal: {
-      id: 599,
-      nombre: "Jefe Final: El Maestro de la Creación",
-      descripcion:
-        "Finaliza un mini-juego completo, con música, efectos de sonido, un menú principal, la capacidad de guardar la puntuación y exportarlo como un ejecutable.",
-    },
-  },
+  }
 ];

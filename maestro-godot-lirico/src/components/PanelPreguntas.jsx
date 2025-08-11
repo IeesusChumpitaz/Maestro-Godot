@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Stack, Paper, TextField } from '@mui/material';
+import { Box, Typography, Button, Stack, Paper, TextField, LinearProgress } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
+// ... (Keep the helper components: PreguntaSeleccionMultiple, PreguntaRellenarEspacio, etc.)
 // Helper function for reordering
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -73,20 +74,13 @@ const PreguntaOrdenarElementos = ({ pregunta, onRespuesta, respuestaSeleccionada
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        // Shuffle items on initial load
         setItems(pregunta.elementos.map(el => ({id: `item-${el}`, content: el})).sort(() => Math.random() - 0.5));
     }, [pregunta]);
 
 
   const onDragEnd = (result) => {
-    if (!result.destination || respuestaSeleccionada) {
-      return;
-    }
-    const newItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
+    if (!result.destination || respuestaSeleccionada) return;
+    const newItems = reorder(items, result.source.index, result.destination.index);
     setItems(newItems);
   };
   
@@ -104,19 +98,7 @@ const PreguntaOrdenarElementos = ({ pregunta, onRespuesta, respuestaSeleccionada
             {items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={respuestaSeleccionada !== null}>
                 {(provided, snapshot) => (
-                  <Paper
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    sx={{
-                      p: 2,
-                      mb: 1,
-                      userSelect: 'none',
-                      backgroundColor: snapshot.isDragging ? 'action.hover' : 'background.paper',
-                      border: esCorrecto !== null && pregunta.respuestaCorrecta[index] === item.content ? '2px solid' : 'none',
-                      borderColor: esCorrecto ? 'success.main' : 'error.main',
-                    }}
-                  >
+                  <Paper ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} sx={{ p: 2, mb: 1, userSelect: 'none', backgroundColor: snapshot.isDragging ? 'action.hover' : 'background.paper' }}>
                     {item.content}
                   </Paper>
                 )}
@@ -135,60 +117,71 @@ const PreguntaOrdenarElementos = ({ pregunta, onRespuesta, respuestaSeleccionada
 };
 
 
-const PanelPreguntas = ({ pregunta }) => {
-  const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
-  const [esCorrecto, setEsCorrecto] = useState(null);
+const PanelPreguntas = ({ preguntas, onQuizCompleto }) => {
+  const [preguntaActualIndex, setPreguntaActualIndex] = useState(0);
+  const [respuestas, setRespuestas] = useState([]);
+  const [quizTerminado, setQuizTerminado] = useState(false);
 
-  useEffect(() => {
-    setRespuestaSeleccionada(null);
-    setEsCorrecto(null);
-  }, [pregunta]);
-
-  if (!pregunta || !pregunta.tipo) {
-    return null;
-  }
+  const preguntaActual = preguntas[preguntaActualIndex];
+  const respuestaActual = respuestas[preguntaActualIndex];
 
   const handleRespuesta = (respuestaUsuario) => {
-    if (respuestaSeleccionada) return;
+    if (respuestaActual) return;
 
-    setRespuestaSeleccionada(respuestaUsuario);
-    let correcto = false;
-    switch (pregunta.tipo) {
+    let esCorrecto = false;
+    switch (preguntaActual.tipo) {
         case 'seleccion_multiple':
         case 'verdadero_falso':
-            correcto = respuestaUsuario === pregunta.respuestaCorrecta;
+            esCorrecto = respuestaUsuario === preguntaActual.respuestaCorrecta;
             break;
         case 'rellenar_espacio':
-            correcto = respuestaUsuario.trim().toLowerCase() === pregunta.respuestaCorrecta.toLowerCase();
+            esCorrecto = respuestaUsuario.trim().toLowerCase() === preguntaActual.respuestaCorrecta.toLowerCase();
             break;
         case 'ordenar_elementos':
-            correcto = JSON.stringify(respuestaUsuario) === JSON.stringify(pregunta.respuestaCorrecta);
+            esCorrecto = JSON.stringify(respuestaUsuario) === JSON.stringify(preguntaActual.respuestaCorrecta);
             break;
-        // TODO: Add other question types
-        default:
-            correcto = false;
+        default: break;
     }
-    setEsCorrecto(correcto);
+
+    setRespuestas([...respuestas, { respuesta: respuestaUsuario, esCorrecto }]);
   };
 
+  const handleSiguiente = () => {
+      if (preguntaActualIndex < preguntas.length - 1) {
+          setPreguntaActualIndex(preguntaActualIndex + 1);
+      } else {
+          setQuizTerminado(true);
+          const todasCorrectas = respuestas.every(r => r.esCorrecto);
+          if(todasCorrectas){
+              onQuizCompleto();
+          }
+      }
+  }
+
   const renderFeedback = () => {
-    if (esCorrecto === null) return null;
+    if (!respuestaActual) return null;
+    const { esCorrecto } = respuestaActual;
     return (
-      <Typography color={esCorrecto ? 'success.main' : 'error.main'} sx={{ mt: 2 }}>
-        {esCorrecto ? '¡Correcto! Has forjado bien este conocimiento.' : '¡Casi! Revisa la lección y vuelve a intentarlo en tu mente.'}
-      </Typography>
+        <Box>
+            <Typography color={esCorrecto ? 'success.main' : 'error.main'} sx={{ mt: 2 }}>
+                {esCorrecto ? '¡Correcto!' : 'Incorrecto.'}
+            </Typography>
+            <Button onClick={handleSiguiente} variant="contained" sx={{mt: 1}}>
+                {preguntaActualIndex < preguntas.length - 1 ? 'Siguiente' : 'Finalizar'}
+            </Button>
+        </Box>
     );
   };
 
   const renderPregunta = () => {
     const commonProps = {
-        pregunta,
+        pregunta: preguntaActual,
         onRespuesta: handleRespuesta,
-        respuestaSeleccionada,
-        esCorrecto
+        respuestaSeleccionada: respuestaActual ? respuestaActual.respuesta : null,
+        esCorrecto: respuestaActual ? respuestaActual.esCorrecto : null
     };
 
-    switch (pregunta.tipo) {
+    switch (preguntaActual.tipo) {
       case 'verdadero_falso':
       case 'seleccion_multiple':
         return <PreguntaSeleccionMultiple {...commonProps} />;
@@ -196,20 +189,32 @@ const PanelPreguntas = ({ pregunta }) => {
         return <PreguntaRellenarEspacio {...commonProps} />;
       case 'ordenar_elementos':
         return <PreguntaOrdenarElementos {...commonProps} />;
-      // case 'asociar_conceptos':
-      //   return <PreguntaAsociarConceptos {...commonProps} />;
       default:
          return <Typography>Este tipo de pregunta no está soportado aún.</Typography>;
     }
   };
+  
+  if(quizTerminado){
+      const correctas = respuestas.filter(r => r.esCorrecto).length;
+      const total = preguntas.length;
+      const todasCorrectas = correctas === total;
+      return (
+          <Box>
+              <Typography variant="h5">Quiz Finalizado</Typography>
+              <Typography>Has respondido {correctas} de {total} preguntas correctamente.</Typography>
+              {!todasCorrectas && <Typography color="error.main" sx={{mt: 1}}>Debes responder todas las preguntas correctamente para completar la lección.</Typography>}
+          </Box>
+      )
+  }
 
   return (
     <Box sx={{ mt: 4, p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 2 }}>
       <Typography variant="h6" gutterBottom>
-        Pon a prueba tu conocimiento:
+        Prueba de Conocimiento ({preguntaActualIndex + 1}/{preguntas.length})
       </Typography>
+      <LinearProgress variant="determinate" value={((preguntaActualIndex + 1) / preguntas.length) * 100} sx={{mb: 2}} />
        <Typography variant="body1" sx={{ mb: 2 }}>
-        {pregunta.enunciado}
+        {preguntaActual.enunciado}
       </Typography>
       {renderPregunta()}
       {renderFeedback()}
