@@ -21,7 +21,11 @@ const style = {
 
 function App() {
   const [panelAbierto, setPanelAbierto] = useState(true);
-  const [gemasCompletadas, setGemasCompletadas] = useLocalStorage('progreso-gemas', []);
+  const [progresoUsuario, setProgresoUsuario] = useLocalStorage('progreso-usuario', {
+    puntos: 0,
+    gemasCompletadas: [],
+    reinosDesbloqueados: [1]
+  });
   const [reinoActivo, setReinoActivo] = useState(null);
   const [leccionActiva, setLeccionActiva] = useState(null);
   const [siguienteGemaId, setSiguienteGemaId] = useState(null);
@@ -31,13 +35,14 @@ function App() {
   useEffect(() => {
     let proximaGemaId = null;
     for (const reino of syllabus) {
-      for (const gema of reino.gemas) {
-        if (!gemasCompletadas.includes(gema.id)) {
-          proximaGemaId = gema.id;
-          break;
+        if (!progresoUsuario.reinosDesbloqueados.includes(reino.reinoId)) continue;
+        for (const gema of reino.gemas) {
+            if (!progresoUsuario.gemasCompletadas.includes(gema.id)) {
+                proximaGemaId = gema.id;
+                break;
+            }
         }
-      }
-      if (proximaGemaId) break;
+        if (proximaGemaId) break;
     }
     setSiguienteGemaId(proximaGemaId);
 
@@ -54,7 +59,28 @@ function App() {
         }
     }
 
-  }, [gemasCompletadas, leccionActiva]);
+  }, [progresoUsuario, leccionActiva]);
+
+  const checkDesbloqueoReino = (gemaId, nuevasGemasCompletadas) => {
+    const gemaActual = syllabus.flatMap(r => r.gemas).find(g => g.id === gemaId);
+    if (!gemaActual) return;
+
+    const reinoDeLaGema = syllabus.find(r => r.gemas.some(g => g.id === gemaId));
+    if (!reinoDeLaGema) return;
+
+    const todasLasGemasDelReinoCompletadas = reinoDeLaGema.gemas.every(g => nuevasGemasCompletadas.includes(g.id));
+
+    if (todasLasGemasDelReinoCompletadas) {
+        const indiceReinoActual = syllabus.findIndex(r => r.reinoId === reinoDeLaGema.reinoId);
+        const proximoReino = syllabus[indiceReinoActual + 1];
+        if (proximoReino && !progresoUsuario.reinosDesbloqueados.includes(proximoReino.reinoId)) {
+            setProgresoUsuario(prev => ({
+                ...prev,
+                reinosDesbloqueados: [...prev.reinosDesbloqueados, proximoReino.reinoId]
+            }));
+        }
+    }
+  };
 
   const togglePanel = () => setPanelAbierto(!panelAbierto);
 
@@ -66,8 +92,18 @@ function App() {
   const handleGemaClick = (gema) => setLeccionActiva(gema);
 
   const handleGemaCompletada = (gemaId) => {
-    if (!gemasCompletadas.includes(gemaId)) {
-      setGemasCompletadas([...gemasCompletadas, gemaId]);
+    if (!progresoUsuario.gemasCompletadas.includes(gemaId)) {
+      const nuevosPuntos = progresoUsuario.puntos + 10;
+      const nuevasGemas = [...progresoUsuario.gemasCompletadas, gemaId];
+      
+      setProgresoUsuario(prev => ({
+        ...prev,
+        puntos: nuevosPuntos,
+        gemasCompletadas: nuevasGemas
+      }));
+
+      checkDesbloqueoReino(gemaId, nuevasGemas);
+
       // Find the next lesson to show in the modal
       let proximaGema = null;
       let proximaGemaEncontrada = false;
@@ -99,11 +135,13 @@ function App() {
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <Header onMenuClick={togglePanel} />
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden', minHeight: 0 }}>
-        <PanelUsuario abierto={panelAbierto} />
+        <PanelUsuario abierto={panelAbierto} progresoUsuario={progresoUsuario} />
         <Box component="main" sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
           <TimelineProgreso 
+            syllabus={syllabus}
             reinoActivo={reinoActivo}
             onReinoSelect={handleReinoSelect}
+            reinosDesbloqueados={progresoUsuario.reinosDesbloqueados}
           />
           <VisorLeccion 
             reino={reinoActivo} 
@@ -111,7 +149,7 @@ function App() {
             onGemaClick={handleGemaClick}
             siguienteGemaId={siguienteGemaId}
             sx={{ flexGrow: 1, mt: 3, minHeight: 0 }}
-            gemasCompletadas={gemasCompletadas}
+            gemasCompletadas={progresoUsuario.gemasCompletadas}
             onGemaCompletada={handleGemaCompletada}
           />
         </Box>

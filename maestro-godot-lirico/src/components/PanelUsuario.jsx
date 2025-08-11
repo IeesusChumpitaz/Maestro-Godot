@@ -1,19 +1,17 @@
 import React from "react";
 import { Box, Typography, Avatar, Divider } from "@mui/material";
 
-// 1. Recibimos la prop 'abierto' que nos dirá si debemos mostrarnos o no.
-const PanelUsuario = ({ abierto }) => {
-  // 2. Si el panel no está abierto, no renderizamos nada.
+const PanelUsuario = ({ abierto, progresoUsuario }) => {
   if (!abierto) {
     return null;
   }
 
-  return (
-    // Misión: Crear un panel lateral que muestre la información del usuario.
-    // Usará un componente Avatar de MUI como placeholder para la imagen de perfil.
-    // Incluirá placeholders para el nombre, nivel y puntos.
-    // Usará un Divider para separar secciones.
+  // Si progresoUsuario no se ha cargado, podemos mostrar un estado de carga o nada.
+  if (!progresoUsuario) {
+      return null; 
+  }
 
+  return (
     <Box
       component="aside"
       sx={{
@@ -21,7 +19,7 @@ const PanelUsuario = ({ abierto }) => {
         flexShrink: 0,
         backgroundColor: "background.paper",
         p: 2,
-        borderRight: "1px solid rgba(255,255,255,0.12)", // Un borde sutil a la derecha
+        borderRight: "1px solid rgba(255,255,255,0.12)",
       }}
     >
       <Box
@@ -33,9 +31,9 @@ const PanelUsuario = ({ abierto }) => {
         }}
       >
         <Avatar sx={{ width: 80, height: 80, mb: 1 }}> U </Avatar>
-        <Typography variant="h6">Nombre de Usuario</Typography>
+        <Typography variant="h6">Creador Novato</Typography>
         <Typography variant="body2" color="text.secondary">
-          Nivel 1: Aprendiz de píxeles
+          Nivel {progresoUsuario.reinosDesbloqueados.length}: Aprendiz de Píxeles
         </Typography>
       </Box>
 
@@ -43,8 +41,9 @@ const PanelUsuario = ({ abierto }) => {
 
       <Box>
         <Typography variant="h6"> Progreso:</Typography>
-        <Typography variant="body1">Puntos de Experiencia: 0</Typography>
-        <Typography variant="body1">Reinos Conquistados: 0/5</Typography>
+        <Typography variant="body1">Puntos de Experiencia: {progresoUsuario.puntos}</Typography>
+        <Typography variant="body1">Gemas Obtenidas: {progresoUsuario.gemasCompletadas.length}</Typography>
+        <Typography variant="body1">Reinos Desbloqueados: {progresoUsuario.reinosDesbloqueados.length}</Typography>
       </Box>
     </Box>
   );

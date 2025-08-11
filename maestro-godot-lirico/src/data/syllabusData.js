@@ -245,8 +245,8 @@ El orden también es ley, especialmente en 2D. Los nodos se dibujan en el orden 
         nombre: "Assets: Importando Tesoros a Tu Reino",
         contenido: `Tus **assets** (imágenes, sonidos, etc.) son los tesoros que le darán vida a tu mundo. Para importarlos, solo tienes que arrastrarlos y soltarlos en la **Dársena del Sistema de Archivos** dentro de Godot.
 
-Cuando importas un asset, Godot crea un archivo `
-          .import` que guarda la configuración de cómo debe ser tratado ese asset. Puedes cambiar esta configuración (por ejemplo, para que una imagen se vea pixelada) en la **pestaña de Importación** que aparece al seleccionar el asset.`,
+Cuando importas un asset, Godot crea un archivo "
+          .import" que guarda la configuración de cómo debe ser tratado ese asset. Puedes cambiar esta configuración (por ejemplo, para que una imagen se vea pixelada) en la **pestaña de Importación** que aparece al seleccionar el asset.`,
         preguntas: [
           {
             tipo: "seleccion_multiple",
