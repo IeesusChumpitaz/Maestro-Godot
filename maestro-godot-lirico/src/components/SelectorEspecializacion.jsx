@@ -1,5 +1,4 @@
 import React from 'react';
-import { Box, Typography, Card, CardActionArea, CardMedia, CardContent, Grid } from '@mui/material';
 import placeholder from '../assets/placeholder.png'; // Importamos el placeholder local
 
 // Datos de prueba para las especializaciones
@@ -11,34 +10,30 @@ const especializaciones = [
 
 const SelectorEspecializacion = () => {
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>Elige tu Senda de Especialización</Typography>
-      <Grid container spacing={4}>
+    <div className="p-4">
+      <h2 className="text-3xl font-bold mb-6 text-white">Elige tu Senda de Especialización</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {especializaciones.map((esp) => (
-          <Grid item xs={12} md={4} key={esp.id}>
-            <Card>
-              <CardActionArea onClick={() => console.log(`Seleccionada: ${esp.nombre}`)}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={esp.imagen}
-                  alt={esp.nombre}
-                  sx={{ backgroundColor: 'grey.800' }}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {esp.nombre}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {esp.desc}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
+          <div key={esp.id} className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+            <button onClick={() => console.log(`Seleccionada: ${esp.nombre}`)} className="block w-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <img
+                src={esp.imagen}
+                alt={esp.nombre}
+                className="w-full h-40 object-cover bg-gray-700"
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-semibold mb-2 text-white">
+                  {esp.nombre}
+                </h3>
+                <p className="text-gray-400 text-sm">
+                  {esp.desc}
+                </p>
+              </div>
+            </button>
+          </div>
         ))}
-      </Grid>
-    </Box>
+      </div>
+    </div>
   );
 };
 

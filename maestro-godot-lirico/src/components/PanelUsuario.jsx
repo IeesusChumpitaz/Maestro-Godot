@@ -1,5 +1,4 @@
 import React from "react";
-import { Box, Typography, Avatar, Divider } from "@mui/material";
 
 const PanelUsuario = ({ abierto, progresoUsuario }) => {
   if (!abierto) {
@@ -12,40 +11,30 @@ const PanelUsuario = ({ abierto, progresoUsuario }) => {
   }
 
   return (
-    <Box
-      component="aside"
-      sx={{
-        width: 250,
-        flexShrink: 0,
-        backgroundColor: "background.paper",
-        p: 2,
-        borderRight: "1px solid rgba(255,255,255,0.12)",
-      }}
+    <aside
+      className="w-[250px] flex-shrink-0 bg-gray-800 p-4 border-r border-gray-700 text-white"
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          mb: 2,
-        }}
+      <div
+        className="flex flex-col items-center mb-4"
       >
-        <Avatar sx={{ width: 80, height: 80, mb: 1 }}> U </Avatar>
-        <Typography variant="h6">Creador Novato</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <div className="w-20 h-20 mb-2 rounded-full bg-gray-600 flex items-center justify-center">
+          <span className="text-4xl">U</span>
+        </div>
+        <h2 className="text-xl font-bold">Creador Novato</h2>
+        <p className="text-sm text-gray-400">
           Nivel {progresoUsuario.reinosDesbloqueados.length}: Aprendiz de Píxeles
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
-      <Divider sx={{ my: 2 }} />
+      <hr className="my-4 border-gray-700" />
 
-      <Box>
-        <Typography variant="h6"> Progreso:</Typography>
-        <Typography variant="body1">Puntos de Experiencia: {progresoUsuario.puntos}</Typography>
-        <Typography variant="body1">Gemas Obtenidas: {progresoUsuario.gemasCompletadas.length}</Typography>
-        <Typography variant="body1">Reinos Desbloqueados: {progresoUsuario.reinosDesbloqueados.length}</Typography>
-      </Box>
-    </Box>
+      <div>
+        <h3 className="text-lg font-semibold"> Progreso:</h3>
+        <p className="text-base">Puntos de Experiencia: {progresoUsuario.puntos}</p>
+        <p className="text-base">Gemas Obtenidas: {progresoUsuario.gemasCompletadas.length}</p>
+        <p className="text-base">Reinos Desbloqueados: {progresoUsuario.reinosDesbloqueados.length}</p>
+      </div>
+    </aside>
   );
 };
 

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Stack, Paper, TextField, LinearProgress } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-// ... (Keep the helper components: PreguntaSeleccionMultiple, PreguntaRellenarEspacio, etc.)
 // Helper function for reordering
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -12,27 +10,35 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 const PreguntaSeleccionMultiple = ({ pregunta, onRespuesta, respuestaSeleccionada, esCorrecto }) => {
-  const getButtonColor = (opcion) => {
-    if (!respuestaSeleccionada) return 'primary';
-    if (opcion === pregunta.respuestaCorrecta) return 'success';
-    if (opcion === respuestaSeleccionada && esCorrecto === false) return 'error';
-    return 'primary';
+  const getButtonClasses = (opcion) => {
+    let classes = "w-full px-4 py-2 rounded-md border transition-colors duration-200 ";
+    if (respuestaSeleccionada === null) {
+      classes += "bg-gray-700 border-gray-600 text-white hover:bg-gray-600";
+    } else {
+      if (opcion === pregunta.respuestaCorrecta) {
+        classes += "bg-green-600 border-green-700 text-white";
+      } else if (opcion === respuestaSeleccionada && esCorrecto === false) {
+        classes += "bg-red-600 border-red-700 text-white";
+      } else {
+        classes += "bg-gray-700 border-gray-600 text-white opacity-50 cursor-not-allowed";
+      }
+    }
+    return classes;
   };
 
   return (
-    <Stack spacing={1}>
+    <div className="space-y-2">
       {pregunta.opciones.map((opcion, index) => (
-        <Button 
+        <button 
           key={index}
-          variant="outlined"
-          color={getButtonColor(opcion)}
+          className={getButtonClasses(opcion)}
           disabled={respuestaSeleccionada !== null}
           onClick={() => onRespuesta(opcion)}
         >
           {opcion}
-        </Button>
+        </button>
       ))}
-    </Stack>
+    </div>
   );
 };
 
@@ -43,30 +49,32 @@ const PreguntaRellenarEspacio = ({ pregunta, onRespuesta, respuestaSeleccionada,
     onRespuesta(inputValue);
   };
 
+  const getInputClasses = () => {
+    let classes = "flex-grow p-2 rounded-md bg-gray-700 border focus:outline-none focus:ring-2 ";
+    if (esCorrecto === null) {
+      classes += "border-gray-600 focus:border-blue-500 focus:ring-blue-500";
+    } else if (esCorrecto === true) {
+      classes += "border-green-500 focus:border-green-500 focus:ring-green-500";
+    } else {
+      classes += "border-red-500 focus:border-red-500 focus:ring-red-500";
+    }
+    return classes;
+  };
+
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <TextField
-        variant="outlined"
-        size="small"
+    <div className="flex space-x-2 items-center">
+      <input
+        type="text"
+        className={getInputClasses()}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         disabled={respuestaSeleccionada !== null}
         placeholder="Tu respuesta..."
-        sx={{
-            '& .MuiOutlinedInput-root': {
-                '&.Mui-focused fieldset': {
-                    borderColor: esCorrecto === null ? 'primary.main' : esCorrecto ? 'success.main' : 'error.main',
-                },
-                '& fieldset': {
-                    borderColor: esCorrecto === null ? 'grey.500' : esCorrecto ? 'success.main' : 'error.main',
-                },
-            },
-        }}
       />
-      <Button onClick={handleSubmit} variant="contained" disabled={respuestaSeleccionada !== null}>
+      <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled={respuestaSeleccionada !== null}>
         Verificar
-      </Button>
-    </Stack>
+      </button>
+    </div>
   );
 };
 
@@ -94,24 +102,28 @@ const PreguntaOrdenarElementos = ({ pregunta, onRespuesta, respuestaSeleccionada
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
         {(provided) => (
-          <Box {...provided.droppableProps} ref={provided.innerRef} sx={{mb: 2}}>
+          <div {...provided.droppableProps} ref={provided.innerRef} className="mb-4">
             {items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={respuestaSeleccionada !== null}>
                 {(provided, snapshot) => (
-                  <Paper ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} sx={{ p: 2, mb: 1, userSelect: 'none', backgroundColor: snapshot.isDragging ? 'action.hover' : 'background.paper' }}>
+                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} 
+                    className={`p-3 mb-2 rounded-md cursor-grab 
+                      ${snapshot.isDragging ? 'bg-blue-700 shadow-lg' : 'bg-gray-700 shadow'}
+                      ${respuestaSeleccionada !== null ? 'opacity-70 cursor-not-allowed' : ''}
+                    `}>
                     {item.content}
-                  </Paper>
+                  </div>
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
-          </Box>
+          </div>
         )}
       </Droppable>
     </DragDropContext>
-    <Button onClick={handleSubmit} variant="contained" disabled={respuestaSeleccionada !== null}>
+    <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" disabled={respuestaSeleccionada !== null}>
         Verificar Orden
-    </Button>
+    </button>
     </>
   );
 };
@@ -162,14 +174,14 @@ const PanelPreguntas = ({ preguntas, onQuizCompleto }) => {
     if (!respuestaActual) return null;
     const { esCorrecto } = respuestaActual;
     return (
-        <Box>
-            <Typography color={esCorrecto ? 'success.main' : 'error.main'} sx={{ mt: 2 }}>
+        <div className="mt-4">
+            <p className={`text-lg ${esCorrecto ? 'text-green-500' : 'text-red-500'}`}>
                 {esCorrecto ? '¡Correcto!' : 'Incorrecto.'}
-            </Typography>
-            <Button onClick={handleSiguiente} variant="contained" sx={{mt: 1}}>
+            </p>
+            <button onClick={handleSiguiente} className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 {preguntaActualIndex < preguntas.length - 1 ? 'Siguiente' : 'Finalizar'}
-            </Button>
-        </Box>
+            </button>
+        </div>
     );
   };
 
@@ -190,7 +202,7 @@ const PanelPreguntas = ({ preguntas, onQuizCompleto }) => {
       case 'ordenar_elementos':
         return <PreguntaOrdenarElementos {...commonProps} />;
       default:
-         return <Typography>Este tipo de pregunta no está soportado aún.</Typography>;
+         return <p className="text-gray-400">Este tipo de pregunta no está soportado aún.</p>;
     }
   };
   
@@ -199,26 +211,28 @@ const PanelPreguntas = ({ preguntas, onQuizCompleto }) => {
       const total = preguntas.length;
       const todasCorrectas = correctas === total;
       return (
-          <Box>
-              <Typography variant="h5">Quiz Finalizado</Typography>
-              <Typography>Has respondido {correctas} de {total} preguntas correctamente.</Typography>
-              {!todasCorrectas && <Typography color="error.main" sx={{mt: 1}}>Debes responder todas las preguntas correctamente para completar la lección.</Typography>}
-          </Box>
+          <div className="p-4 bg-gray-800 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-2">Quiz Finalizado</h3>
+              <p className="text-lg">Has respondido {correctas} de {total} preguntas correctamente.</p>
+              {!todasCorrectas && <p className="text-red-500 mt-2">Debes responder todas las preguntas correctamente para completar la lección.</p>}
+          </div>
       )
   }
 
   return (
-    <Box sx={{ mt: 4, p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 2 }}>
-      <Typography variant="h6" gutterBottom>
+    <div className="mt-4 p-4 bg-gray-800 rounded-lg shadow-md">
+      <h3 className="text-xl font-bold mb-4">
         Prueba de Conocimiento ({preguntaActualIndex + 1}/{preguntas.length})
-      </Typography>
-      <LinearProgress variant="determinate" value={((preguntaActualIndex + 1) / preguntas.length) * 100} sx={{mb: 2}} />
-       <Typography variant="body1" sx={{ mb: 2 }}>
+      </h3>
+      <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+        <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${((preguntaActualIndex + 1) / preguntas.length) * 100}%` }}></div>
+      </div>
+       <p className="text-lg mb-4">
         {preguntaActual.enunciado}
-      </Typography>
+      </p>
       {renderPregunta()}
       {renderFeedback()}
-    </Box>
+    </div>
   );
 };
 

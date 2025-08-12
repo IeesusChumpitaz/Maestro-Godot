@@ -1,21 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Button,
-} from "@mui/material";
 import visualPlaceholder from "../assets/placeholder.png";
 import PanelPreguntas from './PanelPreguntas';
 
 const VisorLeccion = ({ 
     reino, 
-    sx, 
+    className, 
     gemasCompletadas, 
     onGemaCompletada,
     leccionActiva,
@@ -33,30 +22,27 @@ const VisorLeccion = ({
   };
 
   const parsearContenido = (texto) => {
-    if (!texto) return <Typography>Contenido próximamente...</Typography>;
+    if (!texto) return <p className="text-gray-400">Contenido próximamente...</p>;
     const regex = /\[VISUAL:(.*?)\]/g;
     const partes = texto.split(regex);
     return partes.map((parte, index) => {
       if (index % 2 === 1) {
         return (
-          <Box
+          <img
             key={index}
-            component="img"
             src={visualPlaceholder}
             alt={parte.trim()}
-            sx={{ width: "100%", borderRadius: 2, my: 2 }}
+            className="w-full rounded-lg my-4"
           />
         );
       }
       return (
-        <Typography
+        <span
           key={index}
-          component="span"
-          variant="body1"
-          sx={{ whiteSpace: "pre-wrap" }}
+          className="text-base leading-relaxed whitespace-pre-wrap"
         >
           {parte}
-        </Typography>
+        </span>
       );
     });
   };
@@ -70,9 +56,9 @@ const VisorLeccion = ({
     if (leccionActiva) {
       return (
         <>
-          <Typography variant="h4" component="h2" gutterBottom>
+          <h2 className="text-3xl font-bold mb-4">
             {leccionActiva.nombre}
-          </Typography>
+          </h2>
 
           {modoQuiz ? (
             <PanelPreguntas 
@@ -81,16 +67,16 @@ const VisorLeccion = ({
             />
           ) : (
             <>
-              <Box>{parsearContenido(leccionActiva.contenido)}</Box>
-              <Button variant="contained" onClick={() => setModoQuiz(true)} sx={{ mt: 4 }}>
+              <div>{parsearContenido(leccionActiva.contenido)}</div>
+              <button onClick={() => setModoQuiz(true)} className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 Comenzar Prueba
-              </Button>
+              </button>
             </>
           )}
 
-          <Button onClick={volverALista} sx={{ mt: 4 }}>
+          <button onClick={volverALista} className="mt-4 text-blue-400 hover:underline">
             Volver a las Gemas
-          </Button>
+          </button>
         </>
       );
     }
@@ -98,64 +84,63 @@ const VisorLeccion = ({
     if (reino) {
       return (
         <>
-          <Typography variant="h4" component="h2" gutterBottom>
+          <h2 className="text-3xl font-bold mb-4">
             Reino: {reino.nombre}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
+          </h2>
+          <p className="text-lg mb-4 text-gray-300">
             Selecciona una Gema para comenzar tu viaje o repasar lo aprendido:
-          </Typography>
-          <List dense>
+          </p>
+          <ul className="space-y-2">
             {reino.gemas.map((gema) => {
               const estaCompletada = gemasCompletadas.includes(gema.id);
               const esSiguiente = gema.id === siguienteGemaId;
               const isClickable = estaCompletada || esSiguiente;
 
               return (
-                <ListItem key={gema.id} disablePadding>
-                  <ListItemButton 
+                <li key={gema.id}>
+                  <button 
                     onClick={() => isClickable && onGemaClick(gema)}
                     disabled={!isClickable}
-                    sx={{ 
-                        pl: 2, 
-                        borderLeft: esSiguiente ? '4px solid' : '4px solid transparent',
-                        borderColor: esSiguiente ? 'primary.main' : 'transparent'
-                    }}
+                    className={`w-full text-left p-3 rounded-md transition-colors duration-200
+                      ${isClickable ? 'hover:bg-gray-700' : 'cursor-not-allowed opacity-50'}
+                      ${esSiguiente ? 'border-l-4 border-blue-500 bg-gray-700' : 'border-l-4 border-transparent'}
+                    `}
                   >
-                    <ListItemText 
-                        primary={gema.nombre} 
-                        secondary={!isClickable ? "Bloqueada" : (estaCompletada ? "Completada" : "Siguiente lección")}
-                    />
-                    {estaCompletada && ' ✅'}
-                    {!estaCompletada && !esSiguiente && ' 🔒'}
-                  </ListItemButton>
-                </ListItem>
+                    <div className="font-medium text-lg">{gema.nombre}</div>
+                    <div className="text-sm text-gray-400">
+                        {!isClickable ? "Bloqueada" : (estaCompletada ? "Completada" : "Siguiente lección")}
+                    </div>
+                    {estaCompletada && <span className="ml-2">✅</span>}
+                    {!estaCompletada && !esSiguiente && <span className="ml-2">🔒</span>}
+                  </button>
+                </li>
               );
             })}
-          </List>
+          </ul>
         </>
       );
     }
 
     return (
       <>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <h2 className="text-3xl font-bold mb-4">
           El Crisol del Conocimiento
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+        </h2>
+        <p className="text-lg text-gray-400">
           Selecciona un Reino en la línea de tiempo para comenzar tu aventura.
-        </Typography>
+        </p>
       </>
     );
   };
 
   return (
-    <Card
-      sx={{ ...sx, display: "flex", flexDirection: "column", minHeight: 0 }}
+    <div
+      className={`flex flex-col bg-gray-800 rounded-lg shadow-md ${className}`}
     >
-      <CardContent sx={{ p: 4, overflowY: "auto" }}>
+      <div className="p-6 overflow-y-auto flex-grow">
         {renderContent()}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

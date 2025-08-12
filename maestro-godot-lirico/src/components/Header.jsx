@@ -1,45 +1,31 @@
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Box,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu"; // Un ícono para el menú
 
-// 1. Recibimos la nueva prop
 const Header = ({ onMenuClick }) => {
   return (
-    // Misión: Crear un AppBar fijo que sirva como el header principal.
-    // Usaremos un Toolbar para alinear los elementos correctamente.
-    // A la izquierda: Un IconButton para un futuro menú y el título de la App.
-    // A la derecha: Un botón para "Iniciar Sesión".
-    // Usaremos un Box con flexGrow: 1 para empujar el botón de la derecha hasta el final.
-    <AppBar position="static">
-      <Toolbar>
-        {/* LADO IZQUIERDO */}
-        <IconButton
+    <header className="bg-gray-900 text-white shadow-md">
+      <div className="container mx-auto px-4 py-3 flex items-center">
+        {/* LEFT SIDE */}
+        <button
           onClick={onMenuClick}
-          size="large"
-          edge="start"
-          color="inherit"
+          className="p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
           aria-label="menu"
-          sx={{ mr: 2 }} // mr es "margin-right", para dar un poco de espacio
         >
-          <MenuIcon />
-        </IconButton>
-        {/* Este Box es el truco para empujar el botón a la derecha */}
-        <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="h6" component="h1">
+          {/* Placeholder for Menu Icon */}
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div className="flex-grow">
+          <h1 className="text-xl font-semibold ml-4">
             Maestro Godot Lírico
-          </Typography>
-        </Box>
-        {/* LADO DERECHO */}
-        <Button color="inherit">Iniciar Sesión</Button>
-      </Toolbar>
-    </AppBar>
+          </h1>
+        </div>
+        {/* RIGHT SIDE */}
+        <button className="px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
+          Iniciar Sesión
+        </button>
+      </div>
+    </header>
   );
 };
 
